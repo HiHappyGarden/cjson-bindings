@@ -11,7 +11,52 @@ Safe Rust bindings for the [cJSON](https://github.com/DaveGamble/cJSON) library 
 - **JSON Pointer support (RFC6901)**: Navigate JSON documents using JSON Pointer syntax
 - **JSON Patch support (RFC6902)**: Generate and apply JSON patches
 - **JSON Merge Patch support (RFC7386)**: Generate and apply merge patches
-- **no_std compatible**: Suitable for embedded systems
+- **no_std compatible**: Suitable for embedded systems with built-in allocator and panic handler
+
+## Embedded & no_std Support
+
+The library is designed for embedded systems and supports `no_std` environments:
+
+- **Global Allocator**: Uses C's `malloc`/`free` via FFI
+- **Default Panic Handler**: Provides a simple infinite loop panic handler
+- **Custom Panic Handler**: Use the `disable_panic` feature to provide your own
+
+### Cargo Features
+
+- **`std`**: Enables standard library support (required for tests)
+- **`disable_panic`**: Disables both the default allocator and panic handler, allowing you to provide your own
+
+**Example with custom allocator and panic handler:**
+```toml
+[dependencies]
+cjson-rs = { version = "0.5.0", features = ["disable_panic"] }
+```
+
+Then provide your own in your application:
+```rust
+use core::alloc::{GlobalAlloc, Layout};
+
+struct MyAllocator;
+
+unsafe impl GlobalAlloc for MyAllocator {
+    unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+        // Your custom allocation
+    }
+    
+    unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
+        // Your custom deallocation
+    }
+}
+
+#[global_allocator]
+static ALLOCATOR: MyAllocator = MyAllocator;
+
+#[panic_handler]
+fn my_panic(_info: &core::panic::PanicInfo) -> ! {
+    // Your custom panic handling
+    loop {}
+}
+```
 
 ## Features
 

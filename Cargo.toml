@@ -26,6 +26,7 @@ crate-type = ["staticlib", "rlib"]
 [features]
 default = []
 std = []
+disable_panic = []
 
 [profile.dev]
 panic = "abort"
