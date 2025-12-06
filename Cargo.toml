@@ -1,5 +1,5 @@
 [package]
-name = "cjson-rs"
+name = "cjson-bindings"
 version = "0.5.0"
 authors = ["Antonio Salsi <passy.linux@zresa.it>"]
 edition = "2024"
@@ -22,6 +22,7 @@ default-target = "x86_64-unknown-linux-gnu"
 targets = ["x86_64-unknown-linux-gnu", "aarch64-unknown-linux-gnu", "armv7-unknown-linux-gnueabihf", "thumbv8m.main-none-eabi"]
 
 [lib]
+name = "cjson_bindings"
 crate-type = ["staticlib", "rlib"]
 
 [features]
