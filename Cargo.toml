@@ -6,8 +6,19 @@ edition = "2024"
 license = "GPL3"
 readme = "README.md"
 repository = "https://github.com/passy1977/cjson-rs"
+documentation = "https://docs.rs/cjson-rs"
+homepage = "https://github.com/passy1977/cjson-rs"
+description = "Safe Rust bindings for the cJSON library - a lightweight JSON parser in C with support for JSON Pointer (RFC6901), JSON Patch (RFC6902), and JSON Merge Patch (RFC7386)"
+keywords = ["json", "cjson", "no_std", "embedded", "parser"]
+categories = ["no-std", "parsing", "embedded", "api-bindings"]
 autobenches = false
 autotests = false
+
+# Metadata for docs.rs
+[package.metadata.docs.rs]
+features = ["std"]
+default-target = "x86_64-unknown-linux-gnu"
+targets = ["x86_64-unknown-linux-gnu", "aarch64-unknown-linux-gnu", "armv7-unknown-linux-gnueabihf", "thumbv8m.main-none-eabi"]
 
 [lib]
 crate-type = ["staticlib", "rlib"]
