@@ -2,6 +2,9 @@
 
 extern crate alloc;
 
+#[cfg(feature = "disable_panic")]
+extern crate osal_rs;
+
 pub(crate) mod cjson_ffi;
 mod cjson;
 

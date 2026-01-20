@@ -1,10 +1,10 @@
-# cjson-bindings
+# cjson-binding
 
 Safe Rust bindings for the [cJSON](https://github.com/DaveGamble/cJSON) library - a lightweight JSON parser in C.
 
 ## Overview
 
-`cjson-bindings` provides idiomatic, safe Rust wrappers around the cJSON C library, offering:
+`cjson-binding` provides idiomatic, safe Rust wrappers around the cJSON C library, offering:
 
 - **Safe API**: Memory-safe wrappers with automatic resource management (RAII)
 - **Type-safe operations**: Strong typing with `Result` types for error handling
@@ -29,7 +29,7 @@ The library is designed for embedded systems and supports `no_std` environments:
 **Example with custom allocator and panic handler:**
 ```toml
 [dependencies]
-cjson-bindings = { version = "0.5.0", features = ["disable_panic"] }
+cjson-binding = { version = "0.6.0", features = ["disable_panic"] }
 ```
 
 Then provide your own in your application:
@@ -182,7 +182,7 @@ pub enum CJsonError {
 
 ## Memory Safety
 
-`cjson-bindings` ensures memory safety through:
+`` ensures memory safety through:
 
 - **RAII**: `CJson` automatically frees memory when dropped
 - **No manual memory management**: All allocations/deallocations are handled automatically

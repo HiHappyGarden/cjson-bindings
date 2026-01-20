@@ -29,6 +29,10 @@ crate-type = ["staticlib", "rlib"]
 default = []
 std = []
 disable_panic = []
+osal_rs = ["dep:osal-rs", "disable_panic"]
+
+[dependencies]
+osal-rs = { version = "0.3", path = "../osal-rs/osal-rs", features = ["freertos"], optional = true }
 
 [profile.dev]
 panic = "abort"
