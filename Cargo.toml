@@ -1,6 +1,6 @@
 [package]
 name = "cjson-binding"
-version = "0.5.0"
+version = "0.6.0"
 authors = ["Antonio Salsi <passy.linux@zresa.it>"]
 edition = "2024"
 license = "GPL-3.0"
