@@ -33,12 +33,21 @@ mod cjson;
 pub(crate) mod cjson_utils_ffi;
 mod cjson_utils;
 
+#[cfg(feature = "osal_rs")]
 pub mod ser;
+#[cfg(feature = "osal_rs")]
 pub mod de;
 
 // Re-export main types for convenience
 pub use cjson::{CJson, CJsonRef, CJsonResult, CJsonError};
 pub use cjson_utils::{JsonPointer, JsonPatch, JsonMergePatch, JsonUtils};
+#[cfg(feature = "osal_rs")]
+use osal_rs_serde::{Result, Serialize};
+
+#[cfg(feature = "osal_rs")]
+use alloc::string::String;
+
+
 
 // Global allocator for no_std environments (disabled when disable_panic is enabled)
 #[cfg(all(not(any(test, feature = "std")), not(feature = "disable_panic")))]
@@ -75,3 +84,30 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}
 }
 
+#[cfg(feature = "osal_rs")]
+pub fn to_json<T>(value: &T) -> Result<String> 
+where 
+    T: Serialize
+{
+    use crate::ser::JsonSerializer;
+    use osal_rs::log_error;
+    
+    const APP_TAG: &str = "cJSON-RS";
+
+    let mut serializer = JsonSerializer::new().map_err(|e| {
+        log_error!(APP_TAG, "Failed to create JsonSerializer {}", e);
+        osal_rs_serde::Error::InvalidData
+    })?;
+
+    value.serialize("", &mut serializer).map_err(|e| {
+        log_error!(APP_TAG, "Serialization error: {}", e);
+        osal_rs_serde::Error::InvalidData
+    })?;
+    
+    let json = serializer.print().map_err(|e| {
+        log_error!(APP_TAG, "Failed to print JSON: {}", e);
+        osal_rs_serde::Error::InvalidData
+    })?;
+    
+    Ok(json)
+}

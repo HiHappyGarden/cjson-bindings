@@ -29,6 +29,7 @@ use alloc::string::String;
 use alloc::vec::Vec;
 use core::ffi::{CStr, c_char, c_int};
 use core::ptr;
+use core::fmt::Display;
 
 use crate::cjson_ffi::*;
 
@@ -36,7 +37,7 @@ use crate::cjson_ffi::*;
 pub type CJsonResult<T> = Result<T, CJsonError>;
 
 /// Error types for cJSON operations
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CJsonError {
     /// Failed to parse JSON
     ParseError,
@@ -52,6 +53,20 @@ pub enum CJsonError {
     AllocationError,
     /// Invalid operation
     InvalidOperation,
+}
+
+impl Display for CJsonError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            CJsonError::ParseError => write!(f, "Failed to parse JSON"),
+            CJsonError::NullPointer => write!(f, "Null pointer encountered"),
+            CJsonError::InvalidUtf8 => write!(f, "Invalid UTF-8 in string"),
+            CJsonError::NotFound => write!(f, "Item not found"),
+            CJsonError::TypeError => write!(f, "Wrong type"),
+            CJsonError::AllocationError => write!(f, "Memory allocation failed"),
+            CJsonError::InvalidOperation => write!(f, "Invalid operation"),
+        }
+    }
 }
 
 #[cfg(feature = "disable_panic")]
@@ -72,6 +87,7 @@ impl From<osal_rs_serde::Error> for CJsonError {
 }
 
 /// Safe wrapper for cJSON pointer
+#[derive(Debug, Clone)]
 pub struct CJson {
     ptr: *mut cJSON,
 }
