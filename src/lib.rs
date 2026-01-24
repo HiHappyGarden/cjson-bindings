@@ -119,7 +119,7 @@ where
     use crate::de::JsonDeserializer;
     use osal_rs::log_error;
 
-    let mut deserializer = JsonDeserializer::<T>::parse(json).map_err(|e| {
+    let mut deserializer = JsonDeserializer::parse(json).map_err(|e| {
         log_error!(APP_TAG, "Failed to parse JSON: {}", e);
         osal_rs_serde::Error::InvalidData
     })?;
@@ -128,6 +128,8 @@ where
         log_error!(APP_TAG, "Failed to deserialize JSON: {}", e);
         osal_rs_serde::Error::InvalidData
     })?;
+
+    deserializer.drop();
 
     Ok(ret)
 }

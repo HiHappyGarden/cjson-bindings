@@ -246,6 +246,31 @@ See [TESTS.md](TESTS.md) for detailed test documentation and coverage informatio
 - cJSON library installed on your system (`libcjson` and `libcjson_utils`)
 - Standard library support (enabled via the `std` feature for testing)
 
+### Running tests locally (linking cJSON built from source)
+
+If you need to run the crate tests locally and link against a locally-built cJSON (useful for `no_std` embedded workflows where the project CMake already builds cJSON), follow these steps:
+
+1. Clone and build cJSON for the host:
+
+```bash
+git clone --depth 1 --branch v1.7.19 https://github.com/DaveGamble/cJSON.git /path/to/build-host/cJSON
+cmake -S /path/to/build-host/cJSON -B /path/to/build-host/cJSON/build -DBUILD_SHARED_AND_STATIC_LIBS=OFF -DENABLE_CJSON_UTILS=ON -DENABLE_CJSON_TEST=OFF
+cmake --build /path/to/build-host/cJSON/build -- -j
+```
+
+2. Run `cargo test` while telling the Rust linker where to find the cJSON libraries (example assumes you built cJSON under `build-host/cJSON/build` inside the project root):
+
+```bash
+cd cjson-rs
+LD_LIBRARY_PATH="$(pwd)/../build-host/cJSON/build" \
+RUSTFLAGS='-L native=$(pwd)/../build-host/cJSON/build -l cjson -l cjson_utils' \
+cargo test --lib
+```
+
+Notes:
+- Use `-l cjson -l cjson_utils` to link the shared libraries, or link the static variants with `-l static=cjson -l static=cjson_utils` and add the directory with `-L native=...`.
+- The project-level CMake already integrates `cJSON` for embedded builds; these steps let you reuse that same cJSON build artefact for running the host-side unit tests.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.

@@ -597,6 +597,7 @@ impl CJson {
 //     fn drop(&mut self) {
 //         if !self.ptr.is_null() {
 //             unsafe { cJSON_Delete(self.ptr) };
+//             self.ptr = core::ptr::null_mut();
 //         }
 //     }
 // }

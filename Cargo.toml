@@ -3,6 +3,7 @@ name = "cjson-binding"
 version = "0.6.0"
 authors = ["Antonio Salsi <passy.linux@zresa.it>"]
 edition = "2024"
+build = "build.rs"
 license = "GPL-3.0"
 license-file = "LICENSE"
 readme = "README.md"
@@ -34,6 +35,9 @@ osal_rs = ["dep:osal-rs", "dep:osal-rs-serde", "disable_panic"]
 [dependencies]
 osal-rs = { version = "0.3", path = "../osal-rs/osal-rs", features = ["freertos", "serde"], optional = true }
 osal-rs-serde = { version = "0.3", path = "../osal-rs/osal-rs-serde", features = ["derive"], optional = true }
+
+[build-dependencies]
+pkg-config = "0.3"
 
 [profile.dev]
 panic = "abort"
