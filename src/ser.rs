@@ -17,6 +17,8 @@
  *
  ***************************************************************************/
 
+use alloc::collections::BTreeMap;
+
 use osal_rs::print;
 use osal_rs::utils::bytes_to_hex_into_slice;
 use osal_rs_serde::Serializer;
@@ -30,142 +32,135 @@ use alloc::string::String;
 use alloc::vec;
 
 
-pub struct JsonSerializer<'a> {
-    obj: &'a mut CJson,
-    stack: Vec<CJson>,
-    index: usize,
+pub struct JsonSerializer {
+    stack: BTreeMap<String, CJson>,
+    stack_name: Vec<String>,
 }
 
 
-impl<'a> Serializer for JsonSerializer<'a> {
+impl Serializer for JsonSerializer {
     type Error =  CJsonError;
 
     fn serialize_struct_start(&mut self, name: &str, _len: usize) -> core::result::Result<(), Self::Error> {
 
         print!("serialize_struct_start:{}\r\n", name);
 
-
-        
-
         if name == "" {
-            self.stack.push(self.obj.clone());
+            // self.stack.push(self.obj.clone());
+            self.stack_name.push(String::from(""));
+            self.stack.insert(String::from(""), CJson::create_object()?);
 
             Ok(())
         } else {
-            // match self.obj.get_object_item(name) {
-            //     Ok(_) => {
-            //         // Object already exists, do nothing
-            //     },
-            //     Err(_) => {
-            //         let name_string: String = name.into();
-            //         let new_obj = CJson::create_object()?;
-            //         self.obj.add_item_to_object(name, new_obj.clone())?;
-                    
 
-            //         self.containers_stack.push((name_string, new_obj.clone()));
-            //         self.obj = new_obj;
-            //     }
-            // }
+            let len = self.stack.len();
+            if len <= 1 {
+                return Err(CJsonError::InvalidOperation);    
+            }
+            let len = len - 2;
 
-             if let Err(_) = self.obj.get_object_item(name) {
-                // self.obj = CJson::create_object()?;
-                // self.obj.add_item_to_object(name, self.obj.clone())?;
-                // self.containers_stack.push(self.obj.clone());
+
+            let key  = &self.stack_name[len];
+            if let Some(phader_obj) = self.stack.get_mut(key) {
+
+                let obj = CJson::create_object()?;
+                phader_obj.add_item_to_object(name, obj.clone())?;
+                self.stack_name.push(String::from(""));
+                self.stack.insert(String::from(""), obj);
+                Ok(())
+            } else {
+                Err(CJsonError::InvalidOperation)
             }
             
+        
 
-            Ok(())
         }
 
 
     }
 
-    // fn serialize_field<T: Serialize>(&mut self, name: &str, value: &T) -> core::result::Result<(), Self::Error> {
-    //     value.serialize(name, self)
-    // }
 
     fn serialize_struct_end(&mut self) -> core::result::Result<(), Self::Error> {
         
-
-        self.obj = &mut parent_obj;
+        self.stack_name.pop();
 
         Ok(())
     }
 
     fn serialize_bool(&mut self, name: &str, v: bool) -> core::result::Result<(), Self::Error> {
-        self.obj.add_bool_to_object(name, v)?;
+        self.get_current_object()?.add_bool_to_object(name, v)?;
 
         Ok(())
     }
     
     fn serialize_u8(&mut self, name: &str, v: u8) -> core::result::Result<(), Self::Error> {
-        self.obj.add_number_to_object(name, v as f64)?;
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
 
         Ok(())
     }
     
     fn serialize_i8(&mut self, name: &str, v: i8) -> core::result::Result<(), Self::Error> {
-        self.obj.add_number_to_object(name, v as f64)?;
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
 
         Ok(())
     }
     
     fn serialize_u16(&mut self, name: &str, v: u16) -> core::result::Result<(), Self::Error> {
-        self.obj.add_number_to_object(name, v as f64)?;
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
 
         Ok(())
     }
     
     fn serialize_i16(&mut self, name: &str, v: i16) -> core::result::Result<(), Self::Error> {
-        self.obj.add_number_to_object(name, v as f64)?;
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
 
         Ok(())
     }
     
     fn serialize_u32(&mut self, name: &str, v: u32) -> core::result::Result<(), Self::Error> {
-        self.obj.add_number_to_object(name, v as f64)?;
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
 
         Ok(())
     }
     
     fn serialize_i32(&mut self, name: &str, v: i32) -> core::result::Result<(), Self::Error> {
-        self.obj.add_number_to_object(name, v as f64)?;
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
 
         Ok(())
     }
     
     fn serialize_u64(&mut self, name: &str, v: u64) -> core::result::Result<(), Self::Error> {
-        self.obj.add_number_to_object(name, v as f64)?;
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
 
         Ok(())
     }
     
     fn serialize_i64(&mut self, name: &str, v: i64) -> core::result::Result<(), Self::Error> {
-        self.obj.add_number_to_object(name, v as f64)?;
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
 
         Ok(())
     }
     
     fn serialize_u128(&mut self, name: &str, v: u128) -> core::result::Result<(), Self::Error> {
-        self.obj.add_number_to_object(name, v as f64)?;
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
 
         Ok(())
     }
     
     fn serialize_i128(&mut self, name: &str, v: i128) -> core::result::Result<(), Self::Error> {
-        self.obj.add_number_to_object(name, v as f64)?;
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
 
         Ok(())
     }
     
     fn serialize_f32(&mut self, name: &str, v: f32) -> core::result::Result<(), Self::Error> {
-        self.obj.add_number_to_object(name, v as f64)?;
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
 
         Ok(())
     }
     
     fn serialize_f64(&mut self, name: &str, v: f64) -> core::result::Result<(), Self::Error> {
-        self.obj.add_number_to_object(name, v)?;
+        self.get_current_object()?.add_number_to_object(name, v)?;
 
         Ok(())
     }
@@ -178,19 +173,18 @@ impl<'a> Serializer for JsonSerializer<'a> {
             bytes_to_hex_into_slice(v, buffer.as_bytes_mut());
         }
         
-        self.obj.add_string_to_object(name, &buffer)?;
+        self.get_current_object()?.add_string_to_object(name, &buffer)?;
 
         Ok(())
     }
     
     fn serialize_string(&mut self, name: &str, v: &String) -> core::result::Result<(), Self::Error> {
-        self.obj.add_string_to_object(name, v)?;
-
+        self.get_current_object()?.add_string_to_object(name, v)?;
         Ok(())
     }
     
     fn serialize_str(&mut self, name: &str, v: &str) -> core::result::Result<(), Self::Error> {
-        self.obj.add_string_to_object(name, v)?;
+        self.get_current_object()?.add_string_to_object(name, v)?;
 
         Ok(())
     }
@@ -214,24 +208,32 @@ impl<'a> Serializer for JsonSerializer<'a> {
 }
 
 
-impl<'a> JsonSerializer<'a> {
+impl JsonSerializer {
 
     pub fn new() -> CJsonResult<Self> {
 
-        let obj = CJson::create_object()?;
-
         Ok(Self {
-            obj: &mut obj,
-            stack: vec![obj],
-            index: 0,
+            stack: BTreeMap::new(),
+            stack_name: vec![],
         })
     }
 
-    pub fn print(self) -> CJsonResult<String> {
-        self.obj.print()
+    pub fn print(&mut self) -> CJsonResult<String> {
+        self.get_current_object()?.print()
     }
 
-    pub fn print_unformatted(self) -> CJsonResult<String> {
-        self.obj.print_unformatted()
+    pub fn print_unformatted(&mut self) -> CJsonResult<String> {
+        self.get_current_object()?.print_unformatted()
+    }
+
+    fn get_current_object(&mut self) -> CJsonResult<&mut CJson> {
+        if let Some(name) = self.stack_name.last() {
+            if let Some(obj) = self.stack.get_mut(name) {
+                return Ok(obj);
+            }
+        }
+        
+
+        Err(CJsonError::InvalidOperation)
     }
 } 
