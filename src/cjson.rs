@@ -122,6 +122,13 @@ impl CJson {
         ptr
     }
 
+    /// Destructor to free the cJSON object and all his children
+    pub  fn drop(&self) {
+        if !self.ptr.is_null() {
+            unsafe { cJSON_Delete(self.ptr) };
+        }
+    }
+
     // ========================
     // PARSING FUNCTIONS
     // ========================
@@ -586,13 +593,13 @@ impl CJson {
     }
 }
 
-impl Drop for CJson {
-    fn drop(&mut self) {
-        if !self.ptr.is_null() {
-            unsafe { cJSON_Delete(self.ptr) };
-        }
-    }
-}
+// impl Drop for CJson {
+//     fn drop(&mut self) {
+//         if !self.ptr.is_null() {
+//             unsafe { cJSON_Delete(self.ptr) };
+//         }
+//     }
+// }
 
 /// Borrowed reference to a cJSON item (does not own the pointer)
 pub struct CJsonRef {

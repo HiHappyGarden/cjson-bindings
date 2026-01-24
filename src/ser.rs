@@ -54,10 +54,10 @@ impl Serializer for JsonSerializer {
         } else {
 
             let len = self.stack.len();
-            if len <= 1 {
+            if len < 1 {
                 return Err(CJsonError::InvalidOperation);    
             }
-            let len = len - 2;
+            let len = len - 1;
 
 
             let key  = &self.stack_name[len];
@@ -65,8 +65,8 @@ impl Serializer for JsonSerializer {
 
                 let obj = CJson::create_object()?;
                 phader_obj.add_item_to_object(name, obj.clone())?;
-                self.stack_name.push(String::from(""));
-                self.stack.insert(String::from(""), obj);
+                self.stack_name.push(String::from(name));
+                self.stack.insert(String::from(name), obj);
                 Ok(())
             } else {
                 Err(CJsonError::InvalidOperation)
@@ -219,11 +219,27 @@ impl JsonSerializer {
     }
 
     pub fn print(&mut self) -> CJsonResult<String> {
-        self.get_current_object()?.print()
+
+        if let Some(obj) = self.stack.first_entry() {
+            let obj = obj.get();
+            let ret = obj.print();
+            obj.drop();
+            ret
+        } else {
+            Err(CJsonError::NotFound)
+        }
+
     }
 
     pub fn print_unformatted(&mut self) -> CJsonResult<String> {
-        self.get_current_object()?.print_unformatted()
+        if let Some(obj) = self.stack.first_entry() {
+            let obj = obj.get();
+            let ret = obj.print_unformatted();
+            obj.drop();
+            ret
+        } else {
+            Err(CJsonError::NotFound)
+        }
     }
 
     fn get_current_object(&mut self) -> CJsonResult<&mut CJson> {

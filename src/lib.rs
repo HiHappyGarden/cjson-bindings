@@ -104,7 +104,7 @@ where
         osal_rs_serde::Error::InvalidData
     })?;
     
-    let json = serializer.print().map_err(|e| {
+    let json = serializer.print_unformatted().map_err(|e| {
         log_error!(APP_TAG, "Failed to print JSON: {}", e);
         osal_rs_serde::Error::InvalidData
     })?;
