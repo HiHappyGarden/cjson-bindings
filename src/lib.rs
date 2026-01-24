@@ -35,6 +35,7 @@ mod cjson_utils;
 
 #[cfg(feature = "osal_rs")]
 pub mod ser;
+
 #[cfg(feature = "osal_rs")]
 pub mod de;
 
@@ -42,7 +43,7 @@ pub mod de;
 pub use cjson::{CJson, CJsonRef, CJsonResult, CJsonError};
 pub use cjson_utils::{JsonPointer, JsonPatch, JsonMergePatch, JsonUtils};
 #[cfg(feature = "osal_rs")]
-use osal_rs_serde::{Result, Serialize};
+use osal_rs_serde::{Deserialize, Result, Serialize};
 
 #[cfg(feature = "osal_rs")]
 use alloc::string::String;
@@ -84,6 +85,8 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}
 }
 
+const APP_TAG: &str = "cJSON-RS";
+
 #[cfg(feature = "osal_rs")]
 pub fn to_json<T>(value: &T) -> Result<String> 
 where 
@@ -92,12 +95,8 @@ where
     use crate::ser::JsonSerializer;
     use osal_rs::log_error;
     
-    const APP_TAG: &str = "cJSON-RS";
 
-    let mut serializer = JsonSerializer::new().map_err(|e| {
-        log_error!(APP_TAG, "Failed to create JsonSerializer {}", e);
-        osal_rs_serde::Error::InvalidData
-    })?;
+    let mut serializer = JsonSerializer::new();
 
     value.serialize("", &mut serializer).map_err(|e| {
         log_error!(APP_TAG, "Serialization error: {}", e);
@@ -111,3 +110,25 @@ where
     
     Ok(json)
 }
+
+#[cfg(feature = "osal_rs")]
+pub fn from_json<T>(json: &String) -> Result<T> 
+where 
+    T: Deserialize + Default
+{
+    use crate::de::JsonDeserializer;
+    use osal_rs::log_error;
+
+    let mut deserializer = JsonDeserializer::<T>::parse(json).map_err(|e| {
+        log_error!(APP_TAG, "Failed to parse JSON: {}", e);
+        osal_rs_serde::Error::InvalidData
+    })?;
+
+    let ret = T::deserialize(&mut deserializer, "").map_err(|e| {
+        log_error!(APP_TAG, "Failed to deserialize JSON: {}", e);
+        osal_rs_serde::Error::InvalidData
+    })?;
+
+    Ok(ret)
+}
+

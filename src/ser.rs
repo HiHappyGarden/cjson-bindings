@@ -29,7 +29,6 @@ use crate::cjson::CJson;
 use alloc::collections::BTreeMap;
 use alloc::vec::Vec;
 use alloc::string::String;
-use alloc::vec;
 
 
 pub struct JsonSerializer {
@@ -187,14 +186,18 @@ impl Serializer for JsonSerializer {
         Ok(())
     }
     
-    fn serialize_vec<T: Serialize>(&mut self, name: &str, v: &alloc::vec::Vec<T>) -> Result<(), Self::Error> {
+    fn serialize_vec<T>(&mut self, name: &str, v: &Vec<T>) -> Result<(), Self::Error> 
+    where
+        T: Serialize {
         for item in v.iter() {
             item.serialize(name, self)?;
         }
         Ok(())
     }
     
-    fn serialize_array<T: Serialize>(&mut self, name: &str, v: &[T]) -> Result<(), Self::Error> {
+    fn serialize_array<T>(&mut self, name: &str, v: &[T]) -> Result<(), Self::Error> 
+    where
+        T: Serialize {
         for item in v.iter() {
             item.serialize(name, self)?;
         }
@@ -208,12 +211,12 @@ impl Serializer for JsonSerializer {
 
 impl JsonSerializer {
 
-    pub fn new() -> CJsonResult<Self> {
+    pub fn new() -> Self {
 
-        Ok(Self {
+        Self {
             stack: BTreeMap::new(),
-            stack_name: vec![],
-        })
+            stack_name: Vec::new(),
+        }
     }
 
     pub fn print(&mut self) -> CJsonResult<String> {
