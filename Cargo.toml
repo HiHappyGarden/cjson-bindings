@@ -1,5 +1,5 @@
 [package]
-name = "cjson-binding"
+name = "cjson-bindings"
 version = "0.6.0"
 authors = ["Antonio Salsi <passy.linux@zresa.it>"]
 edition = "2024"
@@ -7,9 +7,9 @@ build = "build.rs"
 license = "GPL-3.0"
 license-file = "LICENSE"
 readme = "README.md"
-repository = "https://github.com/HiHappyGarden/cjson-binding"
-documentation = "https://docs.rs/cjson-binding"
-homepage = "https://github.com/HiHappyGarden/cjson-binding"
+repository = "https://github.com/HiHappyGarden/cjson-bindings"
+documentation = "https://docs.rs/cjson-bindings"
+homepage = "https://github.com/HiHappyGarden/cjson-bindings"
 description = "Safe Rust bindings for the cJSON library - a lightweight JSON parser in C with support for JSON Pointer (RFC6901), JSON Patch (RFC6902), and JSON Merge Patch (RFC7386)"
 keywords = ["json", "cjson", "no_std", "embedded", "parser"]
 categories = ["no-std", "parsing", "embedded", "api-bindings"]

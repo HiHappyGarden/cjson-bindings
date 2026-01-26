@@ -1,10 +1,10 @@
-# cjson-binding
+# cjson-bindings
 
 Safe Rust bindings for the [cJSON](https://github.com/DaveGamble/cJSON) library - a lightweight JSON parser in C.
 
 ## Overview
 
-`cjson-binding` provides idiomatic, safe Rust wrappers around the cJSON C library, offering:
+`cjson-bindings` provides idiomatic, safe Rust wrappers around the cJSON C library, offering:
 
 - **Safe API**: Memory-safe wrappers with automatic resource management (RAII)
 - **Type-safe operations**: Strong typing with `Result` types for error handling
@@ -31,7 +31,7 @@ The library is designed for embedded systems and supports `no_std` environments:
 **Example with custom allocator and panic handler:**
 ```toml
 [dependencies]
-cjson-binding = { version = "0.6.0", features = ["disable_panic"] }
+cjson-bindings = { version = "0.6.0", features = ["disable_panic"] }
 ```
 
 Then provide your own in your application:
@@ -78,7 +78,7 @@ fn my_panic(_info: &core::panic::PanicInfo) -> ! {
 
 ### Serialization & Deserialization (with `osal_rs` feature)
 
-When the `osal_rs` feature is enabled, `cjson-binding` provides full integration with the `osal-rs-serde` framework for automatic serialization and deserialization:
+When the `osal_rs` feature is enabled, `cjson-bindings` provides full integration with the `osal-rs-serde` framework for automatic serialization and deserialization:
 
 - **Derive Macros**: Use `#[derive(Serialize, Deserialize)]` on your structs
 - **Type-safe**: Compile-time guarantees for data conversion
@@ -128,7 +128,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-cjson-binding = "0.6.0"
+cjson-bindings = "0.6.0"
 ```
 
 ### With Serialization Support
@@ -137,21 +137,21 @@ For automatic serialization/deserialization with derive macros:
 
 ```toml
 [dependencies]
-cjson-binding = { version = "0.6.0", features = ["osal_rs"] }
+cjson-bindings = { version = "0.6.0", features = ["osal_rs"] }
 ```
 
 ### For Embedded Systems (no_std)
 
 ```toml
 [dependencies]
-cjson-binding = { version = "0.6.0", default-features = false }
+cjson-bindings = { version = "0.6.0", default-features = false }
 ```
 
 ### With Custom Allocator and Panic Handler
 
 ```toml
 [dependencies]
-cjson-binding = { version = "0.6.0", features = ["disable_panic"] }
+cjson-bindings = { version = "0.6.0", features = ["disable_panic"] }
 ```
 
 Available features:
@@ -550,7 +550,7 @@ process_json(&json_str);
 
 ## Comparison with Other Libraries
 
-| Feature | cjson-binding | serde_json | json | tinyjson |
+| Feature | cjson-bindings | serde_json | json | tinyjson |
 |---------|---------------|------------|------|----------|
 | No-std support | ✅ Native | ✅ Via feature | ❌ | ✅ Native |
 | Derive macros | ✅ (via osal_rs) | ✅ (via serde) | ❌ | ❌ |
@@ -564,7 +564,7 @@ process_json(&json_str);
 | Embedded RTOS support | ✅ Excellent | ⚠️ Limited | ❌ | ⚠️ Limited |
 | Learning curve | **Easy** | Moderate | Easy | Easy |
 
-**Choose cjson-binding when:**
+**Choose cjson-bindings when:**
 - Working in embedded/RTOS environments with C interoperability
 - Need RFC6901/6902/7386 support out of the box
 - Prefer battle-tested C library (cJSON is widely used)
