@@ -39,7 +39,7 @@ pub struct JsonDeserializer {
     stack_name: Vec<String>,
 }
 
-impl Deserializer for JsonDeserializer {
+impl<'de> Deserializer<'de> for JsonDeserializer {
     type Error = CJsonError;
     
 
@@ -75,7 +75,7 @@ impl Deserializer for JsonDeserializer {
     /// Deserialize a struct field with name.
     fn deserialize_field<T>(&mut self, name: &str) -> core::result::Result<T, Self::Error>
     where
-        T: Deserialize
+        T: Deserialize<'de>
     {
 
         T::deserialize(self, name)
@@ -189,6 +189,12 @@ impl Deserializer for JsonDeserializer {
         Err(CJsonError::TypeError)
     }
     
+    fn deserialize_str(&mut self, _name: &str) -> core::result::Result<&'de str, Self::Error> {
+        // JSON deserializer cannot return borrowed &str as data is owned by CJson objects
+        // Users should deserialize to String instead
+        Err(CJsonError::InvalidOperation)
+    }
+    
     fn deserialize_string(&mut self, name: &str) -> core::result::Result<String, Self::Error> {
         let item = self.get_item(name)?;
         if item.is_string() {
@@ -205,7 +211,7 @@ impl Deserializer for JsonDeserializer {
     
     fn deserialize_vec<T>(&mut self, name: &str) -> core::result::Result<Vec<T>, Self::Error> 
     where 
-        T: Deserialize {
+        T: Deserialize<'de> {
         let item = self.get_item(name)?;
         if !item.is_array() {
             return Err(CJsonError::TypeError);
@@ -239,7 +245,7 @@ impl Deserializer for JsonDeserializer {
     
     fn deserialize_array<T, const N: usize>(&mut self, name: &str) -> core::result::Result<[T; N], Self::Error> 
     where 
-        T: Deserialize {
+        T: Deserialize<'de> {
         let vec: Vec<T> = self.deserialize_vec(name)?;
         if vec.len() != N {
             return Err(CJsonError::InvalidOperation);

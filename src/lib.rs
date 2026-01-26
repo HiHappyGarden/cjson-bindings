@@ -114,7 +114,7 @@ where
 #[cfg(feature = "osal_rs")]
 pub fn from_json<T>(json: &String) -> Result<T> 
 where 
-    T: Deserialize + Default
+    T: for<'de> Deserialize<'de> + Default
 {
     use crate::de::JsonDeserializer;
     use osal_rs::log_error;
