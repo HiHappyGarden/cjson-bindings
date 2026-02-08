@@ -40,6 +40,127 @@ pub struct JsonSerializer {
 impl Serializer for JsonSerializer {
     type Error =  CJsonError;
 
+    fn serialize_bool(&mut self, name: &str, v: bool) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_bool_to_object(name, v)?;
+
+        Ok(())
+    }
+
+
+    fn serialize_u8(&mut self, name: &str, v: u8) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
+
+        Ok(())
+    }
+
+    fn serialize_i8(&mut self, name: &str, v: i8) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
+
+        Ok(())
+    }
+
+    fn serialize_u16(&mut self, name: &str, v: u16) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
+
+        Ok(())
+    }
+
+    fn serialize_i16(&mut self, name: &str, v: i16) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
+
+        Ok(())
+    }
+
+    fn serialize_u32(&mut self, name: &str, v: u32) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
+
+        Ok(())
+    }
+
+    fn serialize_i32(&mut self, name: &str, v: i32) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
+
+        Ok(())
+    }
+
+    fn serialize_u64(&mut self, name: &str, v: u64) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
+
+        Ok(())
+    }
+
+    fn serialize_i64(&mut self, name: &str, v: i64) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
+
+        Ok(())
+    }
+
+    fn serialize_u128(&mut self, name: &str, v: u128) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
+
+        Ok(())
+    }
+
+    fn serialize_i128(&mut self, name: &str, v: i128) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
+
+        Ok(())
+    }
+
+    fn serialize_f32(&mut self, name: &str, v: f32) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_number_to_object(name, v as f64)?;
+
+        Ok(())
+    }
+
+    fn serialize_f64(&mut self, name: &str, v: f64) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_number_to_object(name, v)?;
+
+        Ok(())
+    }
+
+    fn serialize_bytes(&mut self, name: &str, v: &[u8]) -> Result<(), Self::Error> {
+
+        let mut buffer = String::with_capacity(v.len() * 2);
+
+        unsafe {
+            bytes_to_hex_into_slice(v, buffer.as_bytes_mut());
+        }
+
+        self.get_current_object()?.add_string_to_object(name, &buffer)?;
+
+        Ok(())
+    }
+
+    fn serialize_string(&mut self, name: &str, v: &String) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_string_to_object(name, v)?;
+        Ok(())
+    }
+
+    fn serialize_str(&mut self, name: &str, v: &str) -> Result<(), Self::Error> {
+        self.get_current_object()?.add_string_to_object(name, v)?;
+
+        Ok(())
+    }
+
+    fn serialize_vec<T>(&mut self, name: &str, v: &Vec<T>) -> Result<(), Self::Error>
+    where
+        T: Serialize {
+        for item in v.iter() {
+            item.serialize(name, self)?;
+        }
+        Ok(())
+    }
+
+    fn serialize_array<T>(&mut self, name: &str, v: &[T]) -> Result<(), Self::Error>
+    where
+        T: Serialize {
+        for item in v.iter() {
+            item.serialize(name, self)?;
+        }
+        Ok(())
+    }
+
     fn serialize_struct_start(&mut self, name: &str, _len: usize) -> Result<(), Self::Error> {
 
         if name == "" {
@@ -52,7 +173,7 @@ impl Serializer for JsonSerializer {
 
             let len = self.stack.len();
             if len < 1 {
-                return Err(CJsonError::InvalidOperation);    
+                return Err(CJsonError::InvalidOperation);
             }
             let len = len - 1;
 
@@ -68,139 +189,13 @@ impl Serializer for JsonSerializer {
             } else {
                 Err(CJsonError::InvalidOperation)
             }
-            
-        
-
         }
-
-
     }
-
 
     fn serialize_struct_end(&mut self) -> Result<(), Self::Error> {
-        
+
         self.stack_name.pop();
 
-        Ok(())
-    }
-
-    fn serialize_bool(&mut self, name: &str, v: bool) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_bool_to_object(name, v)?;
-
-        Ok(())
-    }
-    
-    fn serialize_u8(&mut self, name: &str, v: u8) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_number_to_object(name, v as f64)?;
-
-        Ok(())
-    }
-    
-    fn serialize_i8(&mut self, name: &str, v: i8) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_number_to_object(name, v as f64)?;
-
-        Ok(())
-    }
-    
-    fn serialize_u16(&mut self, name: &str, v: u16) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_number_to_object(name, v as f64)?;
-
-        Ok(())
-    }
-    
-    fn serialize_i16(&mut self, name: &str, v: i16) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_number_to_object(name, v as f64)?;
-
-        Ok(())
-    }
-    
-    fn serialize_u32(&mut self, name: &str, v: u32) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_number_to_object(name, v as f64)?;
-
-        Ok(())
-    }
-    
-    fn serialize_i32(&mut self, name: &str, v: i32) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_number_to_object(name, v as f64)?;
-
-        Ok(())
-    }
-    
-    fn serialize_u64(&mut self, name: &str, v: u64) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_number_to_object(name, v as f64)?;
-
-        Ok(())
-    }
-    
-    fn serialize_i64(&mut self, name: &str, v: i64) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_number_to_object(name, v as f64)?;
-
-        Ok(())
-    }
-    
-    fn serialize_u128(&mut self, name: &str, v: u128) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_number_to_object(name, v as f64)?;
-
-        Ok(())
-    }
-    
-    fn serialize_i128(&mut self, name: &str, v: i128) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_number_to_object(name, v as f64)?;
-
-        Ok(())
-    }
-    
-    fn serialize_f32(&mut self, name: &str, v: f32) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_number_to_object(name, v as f64)?;
-
-        Ok(())
-    }
-    
-    fn serialize_f64(&mut self, name: &str, v: f64) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_number_to_object(name, v)?;
-
-        Ok(())
-    }
-    
-    fn serialize_bytes(&mut self, name: &str, v: &[u8]) -> Result<(), Self::Error> {
-        
-        let mut buffer = String::with_capacity(v.len() * 2);
-
-        unsafe {
-            bytes_to_hex_into_slice(v, buffer.as_bytes_mut());
-        }
-        
-        self.get_current_object()?.add_string_to_object(name, &buffer)?;
-
-        Ok(())
-    }
-    
-    fn serialize_string(&mut self, name: &str, v: &String) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_string_to_object(name, v)?;
-        Ok(())
-    }
-    
-    fn serialize_str(&mut self, name: &str, v: &str) -> Result<(), Self::Error> {
-        self.get_current_object()?.add_string_to_object(name, v)?;
-
-        Ok(())
-    }
-    
-    fn serialize_vec<T>(&mut self, name: &str, v: &Vec<T>) -> Result<(), Self::Error> 
-    where
-        T: Serialize {
-        for item in v.iter() {
-            item.serialize(name, self)?;
-        }
-        Ok(())
-    }
-    
-    fn serialize_array<T>(&mut self, name: &str, v: &[T]) -> Result<(), Self::Error> 
-    where
-        T: Serialize {
-        for item in v.iter() {
-            item.serialize(name, self)?;
-        }
         Ok(())
     }
     
