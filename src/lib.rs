@@ -85,9 +85,9 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}
 }
 
+#[cfg(feature = "osal_rs")]
 const APP_TAG: &str = "cJSON-RS";
 
-#[cfg(feature = "osal_rs")]
 pub fn to_json<T>(value: &T) -> Result<String> 
 where 
     T: Serialize
