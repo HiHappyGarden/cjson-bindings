@@ -20,6 +20,7 @@
 
 use osal_rs_serde::Deserialize;
 use osal_rs_serde::Deserializer;
+use osal_rs::utils::hex_to_bytes_into_slice;
 
 use crate::CJsonResult;
 use crate::cjson::CJsonError;
@@ -117,6 +118,24 @@ impl Deserializer for JsonDeserializer {
 
         if item.is_string() {
             let s = item.get_string_value()?;
+            
+            // Check if the string is a hex-encoded string
+            // (even length and all chars are 0-9, a-f, A-F)
+            let is_hex = s.len() % 2 == 0 && 
+                         s.len() > 0 &&
+                         s.chars().all(|c| c.is_ascii_hexdigit());
+            
+            if is_hex {
+                // Decode from hex
+                match hex_to_bytes_into_slice(&s, buffer) {
+                    Ok(len) => return Ok(len),
+                    Err(_) => {
+                        // If hex decoding fails, fall through to UTF-8 copy
+                    }
+                }
+            }
+            
+            // Copy as UTF-8 bytes
             let bytes = s.as_bytes();
             let copy_len = core::cmp::min(bytes.len(), buffer.len());
             buffer[..copy_len].copy_from_slice(&bytes[..copy_len]);
