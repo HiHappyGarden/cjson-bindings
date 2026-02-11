@@ -38,6 +38,7 @@ use alloc::collections::BTreeMap;
 pub struct JsonDeserializer {
     stack: BTreeMap<String, CJson>,
     stack_name: Vec<String>,
+    struct_depth: usize,  // Tracks how many struct_start pushes we've done
 }
 
 impl Deserializer for JsonDeserializer {
@@ -247,6 +248,9 @@ impl Deserializer for JsonDeserializer {
 
         self.stack_name.push(String::from(name));
         self.stack.insert(String::from(name), obj);
+        
+        // Track that we did a push
+        self.struct_depth += 1;
 
         Ok(())
     }
@@ -256,14 +260,15 @@ impl Deserializer for JsonDeserializer {
     where
         T: Deserialize
     {
-
         T::deserialize(self, name)
     }
 
     /// End deserializing a struct.
     fn deserialize_struct_end(&mut self) -> core::result::Result<(), Self::Error> {
-        // pop current nested object unless we're at root
-        if self.stack_name.len() > 1 {
+        // Only pop if we actually pushed in deserialize_struct_start
+        // (i.e., if struct_depth > 0, meaning we weren't called with empty name)
+        if self.struct_depth > 0 {
+            self.struct_depth -= 1;
             if let Some(name) = self.stack_name.pop() {
                 let _ = self.stack.remove(&name);
             }
@@ -309,6 +314,7 @@ impl JsonDeserializer {
         Ok(Self {
             stack,
             stack_name: vec![String::from("")],
+            struct_depth: 0,
         })
     }
 
