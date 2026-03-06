@@ -33,11 +33,11 @@ disable_panic = []
 osal_rs = ["dep:osal-rs", "dep:osal-rs-serde", "disable_panic"]
 
 [dependencies]
-osal-rs = { version = "0.3", path = "../osal-rs/osal-rs", features = ["freertos", "serde"], optional = true }
-osal-rs-serde = { version = "0.3", path = "../osal-rs/osal-rs-serde", features = ["derive"], optional = true }
+osal-rs = { version = "0.4", path = "../osal-rs/osal-rs", features = ["freertos", "serde"], optional = true }
+osal-rs-serde = { version = "0.4", path = "../osal-rs/osal-rs-serde", features = ["derive"], optional = true }
 
 [build-dependencies]
-pkg-config = "0.3"
+pkg-config = "0.4"
 
 [profile.dev]
 panic = "abort"
