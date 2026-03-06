@@ -37,7 +37,7 @@ osal-rs = { version = "0.4", path = "../osal-rs/osal-rs", features = ["freertos"
 osal-rs-serde = { version = "0.4", path = "../osal-rs/osal-rs-serde", features = ["derive"], optional = true }
 
 [build-dependencies]
-pkg-config = "0.4"
+pkg-config = "0.3"
 
 [profile.dev]
 panic = "abort"
