@@ -2,6 +2,10 @@
 
 Safe Rust bindings for the [cJSON](https://github.com/DaveGamble/cJSON) library - a lightweight JSON parser in C.
 
+[![Crates.io](https://img.shields.io/crates/v/cjson-bindings.svg)](https://crates.io/crates/cjson-bindings)
+[![Documentation](https://docs.rs/cjson-bindings/badge.svg)](https://docs.rs/cjson-bindings)
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](LICENSE)
+
 ## Overview
 
 `cjson-bindings` provides idiomatic, safe Rust wrappers around the cJSON C library, offering:
