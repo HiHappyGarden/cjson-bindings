@@ -4,7 +4,7 @@ Safe Rust bindings for the [cJSON](https://github.com/DaveGamble/cJSON) library 
 
 [![Crates.io](https://img.shields.io/crates/v/cjson-bindings.svg)](https://crates.io/crates/cjson-bindings)
 [![Documentation](https://docs.rs/cjson-bindings/badge.svg)](https://docs.rs/cjson-bindings)
-[![License: GPL-3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](LICENSE)
+[![License: LGPL-2.1](https://img.shields.io/badge/License-LGPL%202.1-blue.svg)](LICENSE)
 
 ## Overview
 
@@ -592,7 +592,7 @@ This crate links against the [cJSON](https://github.com/DaveGamble/cJSON) C libr
 
 ## License
 
-This Rust wrapper is licensed under the GNU General Public License v3.0 (GPL-3.0).
+This Rust wrapper is licensed under the GNU Lesser General Public License v2.1 or later (LGPL-2.1-or-later).
 
 The underlying [cJSON library](https://github.com/DaveGamble/cJSON) is licensed under the MIT License.
 
@@ -620,7 +620,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
 
-See [LICENSE](LICENSE) for the full GPL-3.0 license text and [cJSON's license](https://github.com/DaveGamble/cJSON/blob/master/LICENSE) for details.
+See [LICENSE](LICENSE) for the full LGPL-2.1 license text and [cJSON's license](https://github.com/DaveGamble/cJSON/blob/master/LICENSE) for details.
 
 ## Testing
 
