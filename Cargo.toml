@@ -1,6 +1,6 @@
 [package]
 name = "cjson-bindings"
-version = "0.6.3"
+version = "0.6.4"
 authors = ["Antonio Salsi <passy.linux@zresa.it>"]
 edition = "2024"
 build = "build.rs"
